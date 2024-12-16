@@ -6,8 +6,6 @@ public class Mode {
     private final int leftDown = 2;
     private final int rightUp = 3;
     private final int rightDown = 4;
-    private final int hight = 561;
-    private final int width = 541;
     private int x,y,time,count, mode = 0;
     public Mode(int time){
         this.time = time;

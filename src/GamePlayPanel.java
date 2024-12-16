@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
-
 public class GamePlayPanel extends JPanel {
     private TextSource textSource = null;
     private ScorePanel scorePanel = null;

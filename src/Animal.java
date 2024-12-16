@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Vector;
 
+
 public class Animal extends JLabel{
     private Vector<Image> v = new Vector<Image>();
     private int index = 0;
@@ -24,4 +25,5 @@ public class Animal extends JLabel{
             super.paintComponent(g);
             g.drawImage(v.get(index), 0,0,this.getWidth(),this.getWidth(),null);
         }
+
 }
