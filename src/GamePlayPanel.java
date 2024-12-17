@@ -9,12 +9,12 @@ import java.util.Vector;
 public class GamePlayPanel extends JPanel {
     private TextSource textSource = null;
     private ScorePanel scorePanel = null;
-    private JLabel animalLabel = new JLabel("Hello");
     private InputPanel input = new InputPanel();
     private MainThread mainThread = new MainThread();
-    private Vector<Animal> animals = new Vector<Animal>(6);
-    private Vector<Mode> modes = new Vector<Mode>(6);
-    private Vector<JLabel> labels = new Vector<JLabel>(6);
+    private Vector<Animal> animals = new Vector<Animal>(7);
+    private Vector<Mode> modes = new Vector<Mode>(7);
+    private Vector<JLabel> labels = new Vector<JLabel>(7);
+    private Stone stone = new Stone();
     private GameGroundPanel ground = new GameGroundPanel();
 
     public GamePlayPanel(ScorePanel scorePanel, TextSource textSource){
@@ -31,6 +31,7 @@ public class GamePlayPanel extends JPanel {
     }
 
     class GameGroundPanel extends JPanel{
+        private ImageIcon icon = new ImageIcon("image/background.jpg");
 
         public void init(){
             setLayout(null);
@@ -51,6 +52,7 @@ public class GamePlayPanel extends JPanel {
                 label.setText(textSource.get());
                 label.setSize(100,50);
                 label.setFont(new Font("Malgun Gothic",Font.BOLD,20));
+                label.setForeground(Color.white);
                 label.setLocation(animal.getX()+animal.getWidth()/2/2/2,animal.getY()+animal.getHeight()-20);
 
                 add(animals.get(i));
@@ -58,7 +60,10 @@ public class GamePlayPanel extends JPanel {
                 animal.setVisible(true);
                 label.setVisible(true);
             }
-
+            stone.setPoint(250,450);
+            stone.setLocation(stone.getX(),stone.getY());
+            add(stone);
+            stone.setVisible(true);
         }
         public int location(int point, String name){
             if(name.equals("x")){
@@ -76,6 +81,12 @@ public class GamePlayPanel extends JPanel {
             return point;
         }
 
+        @Override
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.drawImage(icon.getImage(),0,0,this.getWidth(), this.getHeight(),null);
+        }
+
     }
     class MainThread extends Thread{
         @Override
@@ -87,6 +98,19 @@ public class GamePlayPanel extends JPanel {
                     animals.get(i).incread();
                     animals.get(i).setLocation(ground.location(animals.get(i).getX()+modes.get(i).getX(),"x"),ground.location(animals.get(i).getY()+modes.get(i).getY(),"y"));
                     labels.get(i).setLocation(animals.get(i).getX()+animals.get(i).getWidth()/2/2/2,animals.get(i).getY()+animals.get(i).getHeight()-20);
+                }
+
+                if(stone.swich){
+                    stone.setVisible(true);
+                    stone.setLocation(stone.go(animals.get(stone.index).getX(),"x"),stone.go(animals.get(stone.index).getY(),"y"));
+                    if(stone.doom(animals.get(stone.index).getX(),animals.get(stone.index).getY())){
+                        animals.get(stone.index).setLocation((int)(Math.random()*450), (int)(Math.random()*400));
+                        labels.get(stone.index).setText(textSource.get());
+                        stone.setVisible(false);
+                        stone.setPoint(250,450);
+                        stone.setLocation(stone.getX(),stone.getY());
+                        stone.swich = false;
+                    }
                 }
                 try {
                     sleep(100);
@@ -109,9 +133,9 @@ public class GamePlayPanel extends JPanel {
                     if(text.length() == 0){return;}
                     for(int i=0; i<labels.capacity();i++) {
                         if (text.equals(labels.get(i).getText())) {
+                            stone.swich=true;
+                            stone.index = i;
                             scorePanel.increase();
-                            animals.get(i).setLocation((int)(Math.random()*450), (int)(Math.random()*400));
-                            labels.get(i).setText(textSource.get());
                             t.setText(""); //현재 입력된 내용 지우기
                         }
                     }

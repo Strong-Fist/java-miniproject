@@ -1,15 +1,29 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Vector;
 
 public class TextSource {
     private Vector<String> v = new Vector<String>();
 
-    public TextSource(){
-        v.add("장민권");
-        v.add("김경순");
-        v.add("장양일");
-        v.add("이예원");
-        v.add("박소영");
-        v.add("이우천");
+    public TextSource()  {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader( new FileReader("korea.txt"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        String str;
+        while (true) {
+            try {
+                if ((str = reader.readLine()) == null) break;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            v.add(str);
+        }
+
     }
 
     public String get(){
