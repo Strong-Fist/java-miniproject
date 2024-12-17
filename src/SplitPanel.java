@@ -22,8 +22,6 @@ public class SplitPanel extends JSplitPane {
         this.setRightComponent(vPane);
     }
 
-    public void set(JPanel panel){
-        setLeftComponent(panel);
-    }
+
 
 }

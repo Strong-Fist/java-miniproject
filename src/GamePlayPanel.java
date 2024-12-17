@@ -25,9 +25,12 @@ public class GamePlayPanel extends JPanel {
         add(input, BorderLayout.SOUTH);
 
     }
+
     public void startGeme(){
-        mainThread.start();
+        scorePanel.setTimer(5);
         ground.init();
+        mainThread.start();
+        scorePanel.start();
     }
 
     class GameGroundPanel extends JPanel{
@@ -63,7 +66,7 @@ public class GamePlayPanel extends JPanel {
             stone.setPoint(250,450);
             stone.setLocation(stone.getX(),stone.getY());
             add(stone);
-            stone.setVisible(true);
+            stone.setVisible(false);
         }
         public int location(int point, String name){
             if(name.equals("x")){
@@ -88,10 +91,22 @@ public class GamePlayPanel extends JPanel {
         }
 
     }
+
+    synchronized public void checkTimer(){
+        if(scorePanel.getTimerStop()){
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                return;
+            }
+        }
+    }
+
     class MainThread extends Thread{
         @Override
         public void run(){
             while(true){
+                checkTimer();
                 for(int i=0;i<animals.size();i++){
                     animals.get(i).repaint();
                     modes.get(i).random();
@@ -135,7 +150,7 @@ public class GamePlayPanel extends JPanel {
                         if (text.equals(labels.get(i).getText())) {
                             stone.swich=true;
                             stone.index = i;
-                            scorePanel.increase();
+                            scorePanel.scoreIncrease();
                             t.setText(""); //현재 입력된 내용 지우기
                         }
                     }
